@@ -1322,6 +1322,13 @@ initializr:
           versionRange: "[1.3.0.RELEASE,2.0.0.M1)"
           groupId: org.springframework.boot
           artifactId: spring-boot-actuator-docs
+    - name: ipu
+      content:
+        - name: ipu basic
+          id: ipu basic
+          description: ipu basic dependcy
+          version: 3.0-SNAPSHOT
+          scop: runtime
   types:
     - name: Maven Project
       id: maven-project

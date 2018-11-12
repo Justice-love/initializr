@@ -51,7 +51,8 @@
 		<module>initializr-docs</module>
 		<module>initializr-generator</module>
 		<module>initializr-web</module>
-	</modules>
+        <module>initializr-others</module>
+    </modules>
 
 	<dependencyManagement>
 		<dependencies>
@@ -81,6 +82,11 @@
 				<artifactId>initializr-web</artifactId>
 				<version>0.7.0.BUILD-SNAPSHOT</version>
 				<type>test-jar</type>
+			</dependency>
+			<dependency>
+				<groupId>io.spring.initializr</groupId>
+				<artifactId>initializr-others</artifactId>
+				<version>0.7.0.BUILD-SNAPSHOT</version>
 			</dependency>
 
 			<dependency>

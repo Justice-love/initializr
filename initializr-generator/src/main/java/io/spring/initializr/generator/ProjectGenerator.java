@@ -22,13 +22,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import io.spring.initializr.InitializrException;
@@ -37,6 +31,8 @@ import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrConfiguration.Env.Maven.ParentPom;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
+import io.spring.initializr.others.CustomizeTemplate;
+import io.spring.initializr.others.RenderContent;
 import io.spring.initializr.util.TemplateRenderer;
 import io.spring.initializr.util.Version;
 import io.spring.initializr.util.VersionProperty;
@@ -103,6 +99,9 @@ public class ProjectGenerator {
 	private File temporaryDirectory;
 
 	private transient Map<String, List<File>> temporaryFiles = new LinkedHashMap<>();
+
+	@Autowired(required = false)
+	private CustomizeTemplate[] customizeTemplates;
 
 	public InitializrMetadataProvider getMetadataProvider() {
 		return this.metadataProvider;
@@ -272,6 +271,15 @@ public class ProjectGenerator {
 			new File(dir, "src/main/resources/templates").mkdirs();
 			new File(dir, "src/main/resources/static").mkdirs();
 		}
+
+		Arrays.stream(customizeTemplates).forEach(customizeTemplate -> {
+			List<RenderContent> contents = customizeTemplate.contents();
+			contents.forEach(c -> {
+				File srcDir = new File(dir, c.getDestPath());
+				srcDir.mkdirs();
+				write(new File(srcDir, c.getFileName()), c.getFileName(), model);
+			});
+		});
 		return rootDir;
 	}
 
