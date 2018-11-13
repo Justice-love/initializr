@@ -18,6 +18,9 @@ package io.spring.initializr.web.project;
 
 import java.beans.PropertyDescriptor;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -28,7 +31,10 @@ import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.metadata.TypeCapability;
 
+import io.spring.initializr.others.CustomizeTemplate;
+import io.spring.initializr.others.RenderContent;
 import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.resource.ResourceUrlProvider;
@@ -46,6 +52,9 @@ public abstract class AbstractInitializrController {
 	private final Function<String, String> linkTo;
 
 	private Boolean forceSsl;
+
+	@Autowired(required = false)
+	private CustomizeTemplate[] customizeTemplates;
 
 	protected AbstractInitializrController(InitializrMetadataProvider metadataProvider,
 			ResourceUrlProvider resourceUrlProvider) {
@@ -90,10 +99,19 @@ public abstract class AbstractInitializrController {
 			}
 		}
 
+		List<RenderContent> contents = extractContent(customizeTemplates);
+		model.put("renderContents", contents);
+
 		// Google analytics support
 		model.put("trackingCode",
 				metadata.getConfiguration().getEnv().getGoogleAnalyticsTrackingCode());
 
+	}
+
+	private List<RenderContent> extractContent(CustomizeTemplate[] customizeTemplates) {
+	    List<RenderContent> contentList = new LinkedList<>();
+		Arrays.stream(customizeTemplates).forEach(customizeTemplate -> contentList.addAll(customizeTemplate.contents()));
+		return contentList;
 	}
 
 	public Function<String, String> getLinkTo() {

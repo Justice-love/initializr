@@ -29,4 +29,8 @@ public class RenderContent {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public String contentKey() {
+        return destPath + fileName;
+    }
 }

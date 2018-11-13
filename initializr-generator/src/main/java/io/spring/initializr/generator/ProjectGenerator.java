@@ -46,6 +46,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.util.Assert;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StreamUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * Generate a project based on the configured metadata.
@@ -274,7 +275,7 @@ public class ProjectGenerator {
 
 		Arrays.stream(customizeTemplates).forEach(customizeTemplate -> {
 			List<RenderContent> contents = customizeTemplate.contents();
-			contents.forEach(c -> {
+			contents.stream().filter(c -> request.getRender().contains(c.contentKey())).forEach(c -> {
 				File srcDir = new File(dir, c.getDestPath());
 				srcDir.mkdirs();
 				write(new File(srcDir, c.getFileName()), c.getFileName(), model);

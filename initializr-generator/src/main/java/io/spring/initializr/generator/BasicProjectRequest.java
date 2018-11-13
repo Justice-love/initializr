@@ -17,7 +17,9 @@
 package io.spring.initializr.generator;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.util.StringUtils;
 
@@ -29,6 +31,8 @@ import org.springframework.util.StringUtils;
 public class BasicProjectRequest {
 
 	private List<String> style = new ArrayList<>();
+
+	private Set<String> render = new HashSet<>();
 
 	private List<String> dependencies = new ArrayList<>();
 
@@ -153,6 +157,14 @@ public class BasicProjectRequest {
 
 	public void setLanguage(String language) {
 		this.language = language;
+	}
+
+	public Set<String> getRender() {
+		return render;
+	}
+
+	public void setRender(Set<String> render) {
+		this.render = render;
 	}
 
 	public String getPackageName() {
