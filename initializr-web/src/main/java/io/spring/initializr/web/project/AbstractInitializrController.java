@@ -32,10 +32,12 @@ import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.metadata.TypeCapability;
 
 import io.spring.initializr.others.CustomizeTemplate;
+import io.spring.initializr.others.RenderContainer;
 import io.spring.initializr.others.RenderContent;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.resource.ResourceUrlProvider;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -100,7 +102,9 @@ public abstract class AbstractInitializrController {
 		}
 
 		List<RenderContent> contents = extractContent(customizeTemplates);
-		model.put("renderContents", contents);
+		if (! CollectionUtils.isEmpty(contents)) {
+			model.put("container", new RenderContainer(contents));
+		}
 
 		// Google analytics support
 		model.put("trackingCode",
